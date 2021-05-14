@@ -57,6 +57,7 @@
     <addaction name="actionClose"/>
     <addaction name="separator"/>
     <addaction name="actionEnable_Backup"/>
+    <addaction name="actionRestore_File"/>
    </widget>
    <widget class="QMenu" name="menu_Edit">
     <property name="title">
@@ -130,6 +131,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+G</string>
+   </property>
+  </action>
+  <action name="actionRestore_File">
+   <property name="text">
+    <string>Restore File</string>
    </property>
   </action>
  </widget>

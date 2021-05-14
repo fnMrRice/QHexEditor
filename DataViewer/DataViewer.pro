@@ -13,24 +13,33 @@ SOURCES += \
     DataViewWidget/Cursor/IOverlayWidget.cpp \
     DataViewWidget/Cursor/CursorController.cpp \
     DataViewWidget/Cursor/IBeamCursorOverlay.cpp \
+    Entity/BackupInfo.cpp \
     StructViewWidget/StructSelectDialog.cpp \
     StructViewWidget/StructViewWidget.cpp \
+    Utils/ByteArrayReader.cpp \
+    Utils/RestoreThread.cpp \
+    Utils/SaveBackupFileThread.cpp \
+    Utils/Utils.cpp \
     common/FileReader.cpp \
     MainWindow/FileViewWidget.cpp \
     MainWindow/MainWindow.cpp \
     common/RenderColor.cpp \
     DataViewWidget/DataRenderWidget.cpp \
     common/Settings.cpp \
-    main.cpp \
-    common/utils.cpp
+    main.cpp
 
 HEADERS += \
     DataViewWidget/ContextMenuController.h \
     DataViewWidget/Cursor/CursorController.h \
     DataViewWidget/Cursor/IBeamCursorOverlay.h \
     DataViewWidget/Cursor/IOverlayWidget.h \
+    Entity/BackupInfo.h \
     StructViewWidget/StructSelectDialog.h \
     StructViewWidget/StructViewWidget.h \
+    Utils/ByteArrayReader.h \
+    Utils/RestoreThread.h \
+    Utils/SaveBackupFileThread.h \
+    Utils/Utils.h \
     common/Exceptions.h \
     common/FileReader.h \
     MainWindow/FileViewWidget.h \
@@ -38,8 +47,7 @@ HEADERS += \
     common/RenderColor.h \
     DataViewWidget/DataRenderWidget.h \
     common/Settings.h \
-    common/pch.h \
-    common/utils.h
+    common/pch.h
 
 FORMS += \
     MainWindow/FileViewWidget.ui \

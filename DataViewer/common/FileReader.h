@@ -1,18 +1,19 @@
 #ifndef FILEREADER_H
 #define FILEREADER_H
 
-#include <QFileDevice>
+#include <QFile>
 #include <QObject>
 #include <memory>
 
 class FileReader {
    public:
-    explicit FileReader(const std::shared_ptr<QFileDevice> &file);
+    explicit FileReader(const std::shared_ptr<QFile> &file);
 
    public:
     //    QByteArray readBytes(const size_t &size);  // for sequencal devices
     QByteArray readBytes(const size_t &begin, const size_t &size);
     size_t fileSize() const;
+    std::shared_ptr<QFile> file() const { return m_file.lock(); }
 
    private:
     static size_t constexpr BUFFER_SIZE = 4 * 1024 * 1024;  // 4m bytes
@@ -23,7 +24,7 @@ class FileReader {
     // the cache is not worranty to be not enough
     size_t m_buffer_begin = 0;
     size_t m_displaySize = 0;
-    std::weak_ptr<QFileDevice> m_file;
+    std::weak_ptr<QFile> m_file;
     QByteArray m_buffer;
 };
 

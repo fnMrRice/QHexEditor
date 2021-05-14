@@ -11,10 +11,10 @@
 #include "ContextMenuController.h"
 #include "Cursor/CursorController.h"
 #include "Cursor/IBeamCursorOverlay.h"
+#include "Utils/Utils.h"
 #include "common/Settings.h"
-#include "common/utils.h"
 
-DataRenderWidget::DataRenderWidget(const std::shared_ptr<QFileDevice> &file, QWidget *parent) : QWidget(parent) {
+DataRenderWidget::DataRenderWidget(const std::shared_ptr<QFile> &file, QWidget *parent) : QWidget(parent) {
     m_reader = std::make_shared<FileReader>(file);
 
     m_overlay = std::make_unique<IBeamCursorOverlay>(this);

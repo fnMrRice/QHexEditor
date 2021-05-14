@@ -2,7 +2,7 @@
 
 #include "Exceptions.h"
 
-FileReader::FileReader(const std::shared_ptr<QFileDevice> &file) : m_file(file) {
+FileReader::FileReader(const std::shared_ptr<QFile> &file) : m_file(file) {
     if (!file->isOpen()) {
         auto success = file->open(QIODevice::ReadOnly);
         if (!success) {

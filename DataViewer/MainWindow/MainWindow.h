@@ -29,6 +29,7 @@ class MainWindow : public QMainWindow {
     void slot_onTabChanged(int index);
     void slot_onSaveFile();
     void slot_onCloseFile();
+    void slot_onRestoreFile();
 
    private:
     Ui::MainWindow *ui;

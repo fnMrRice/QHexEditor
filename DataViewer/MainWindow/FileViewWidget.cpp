@@ -12,19 +12,31 @@ FileViewWidget::FileViewWidget(const std::shared_ptr<QFile> &file, QWidget *pare
     : QWidget(parent), ui(new Ui::Widget), m_file(file) {
     ui->setupUi(this);
 
-    m_widget = std::make_unique<DataRenderWidget>(m_file, this);
+    m_renderWidget = std::make_unique<DataRenderWidget>(m_file, this);
     auto layout = ui->container->layout();
-    layout->addWidget(m_widget.get());
-    m_widget->show();
+    layout->addWidget(m_renderWidget.get());
+    m_renderWidget->show();
 
     ui->tabWidget->tabBar()->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(m_widget.get(), &DataRenderWidget::signal_cursorPosChanged, this, &FileViewWidget::slot_onCursorPosChanged);
+    connect(m_renderWidget.get(), &DataRenderWidget::signal_cursorPosChanged, this, &FileViewWidget::slot_onCursorPosChanged);
     connect(ui->tabWidget->tabBar(), &QTabBar::customContextMenuRequested, this, &FileViewWidget::slot_onStructViewMenu);
 }
 
 FileViewWidget::~FileViewWidget() {
     delete ui;
+}
+
+std::unordered_map<size_t, std::pair<uint8_t, uint8_t>> FileViewWidget::modified() const {
+    std::unordered_map<size_t, std::pair<uint8_t, uint8_t>> retval;
+    auto mod = m_renderWidget->modified();
+    for (auto const &[pos, after] : mod) {
+        m_file->seek(pos);
+        auto before = m_file->read(1);
+        auto before_c = before.at(0);
+        retval.insert(std::make_pair(pos, std::make_pair(before_c, after)));
+    }
+    return retval;
 }
 
 void FileViewWidget::addStructTab(const int &tab) {
@@ -33,10 +45,10 @@ void FileViewWidget::addStructTab(const int &tab) {
     if (current == 0) current = 1;  // do not insert before first tab
     auto dialog = new StructSelectDialog(this);
     connect(dialog, &StructSelectDialog::signal_structAccepted, this, [this, current](const std::shared_ptr<Entity::Struct> &item) {
-        auto viewer = std::make_shared<StructViewWidget>(item, m_widget->reader(), this);
+        auto viewer = std::make_shared<StructViewWidget>(item, m_renderWidget->reader(), this);
         m_viewers.insert(viewer);
         ui->tabWidget->insertTab(current, viewer.get(), item->get_name());
-        connect(m_widget.get(), &DataRenderWidget::signal_cursorPosChanged, viewer.get(), &StructViewWidget::slot_onCursorChanged);
+        connect(m_renderWidget.get(), &DataRenderWidget::signal_cursorPosChanged, viewer.get(), &StructViewWidget::slot_onCursorChanged);
     });
     dialog->show();
 }
@@ -52,8 +64,8 @@ void FileViewWidget::removeStructTab(const int &tab) {
 }
 
 void FileViewWidget::slot_onCursorPosChanged(size_t pos) {
-    auto reader = m_widget->reader();
-    auto begin = m_widget->begin() + pos;
+    auto reader = m_renderWidget->reader();
+    auto begin = m_renderWidget->begin() + pos;
     auto data = reader->readBytes(begin, 16);
     auto raw = static_cast<void *>(data.data());
 

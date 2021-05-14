@@ -18,12 +18,13 @@ class ContextMenuController;
 class DataRenderWidget : public QWidget {
     Q_OBJECT
    public:
-    explicit DataRenderWidget(const std::shared_ptr<QFileDevice> &file, QWidget *parent = nullptr);
+    explicit DataRenderWidget(const std::shared_ptr<QFile> &file, QWidget *parent = nullptr);
 
    public:
     QSize sizeHint() const override final;
     std::shared_ptr<FileReader> reader() const { return m_reader; }
     size_t begin() const { return m_begin; }
+    std::unordered_map<size_t, uint8_t> modified() const { return m_modified; }
 
    protected:
     void paintEvent(QPaintEvent *) override final;

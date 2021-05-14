@@ -3,6 +3,9 @@
 #include <QFileDialog>
 #include <QStandardPaths>
 
+#include "Entity/BackupInfo.h"
+#include "Utils/RestoreThread.h"
+#include "Utils/SaveBackupFileThread.h"
 #include "ui_MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
@@ -32,6 +35,7 @@ void MainWindow::initSignals() {
     connect(ui->action_Open, &QAction::triggered, this, &MainWindow::slot_onOpenFile);
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::slot_onSaveFile);
     connect(ui->actionClose, &QAction::triggered, this, &MainWindow::slot_onCloseFile);
+    connect(ui->actionRestore_File, &QAction::triggered, this, &MainWindow::slot_onRestoreFile);
 
     //    connect(m_action_save.get(), &QAction::triggered, this, &MainWindow::slot_onSaveFile);
     //    connect(m_action_close.get(), &QAction::triggered, this, &MainWindow::slot_onCloseFile);
@@ -75,20 +79,55 @@ void MainWindow::slot_onTabChanged(int index) {
 }
 
 void MainWindow::slot_onSaveFile() {
-    // save backup file first
-    std::shared_ptr<QFile> backup_file;
-    if (ui->actionEnable_Backup->isChecked()) {  // save backup file
+    // find current file viewer widget
+    auto row = ui->o_fileList->currentRow();
+    if (row == -1) return;
+    auto iter = m_widgets.find(row);
+    if (iter == m_widgets.end()) return;
+    auto widget = iter->second;
+
+    if (ui->actionEnable_Backup->isChecked()) {
+        // save backup file, this needs md5 checksum, which may take a long time.
+        // so do these works on a new thread
+
         // select backup file
-        // read file and calculate checksum
-        // write checksum to backup file
-        // write modified data to backup file
-    }
+        auto const &homes = QStandardPaths::standardLocations(QStandardPaths::HomeLocation);
+        QString homePath;
+        if (!homes.isEmpty()) {
+            homePath = homes[0];
+        }
+        auto path = QFileDialog::getSaveFileName(this, tr("Choose to save backup file"), homePath);
 
-    // save file here
+        // init vairants the thread needs
+        auto backup_file = std::make_shared<QFile>(path);
+        auto file = widget->file();
+        auto mod = widget->modified();
+        auto backupInfo = std::make_shared<BackupInfo>();
+        backupInfo->set_modification(mod);
 
-    if (ui->actionEnable_Backup->isChecked()) {  // save backup file
-        // read saved file and calculate checksum
-        // write checksum
+        // can move to a new thread now.
+        auto thread = new SaveBackupFileThread(backup_file, file, backupInfo);
+        thread->start();
+    } else {
+        // save the file only
+        auto file = widget->file();
+        auto mod = widget->modified();
+        if (!file->isWritable()) {
+            if (file->isOpen()) {
+                file->close();
+                file->open(QIODevice::ReadWrite);
+            } else {
+                file->open(QIODevice::ReadWrite);
+            }
+        }
+
+        for (auto const &[pos, values] : mod) {
+            auto const &[before, after] = values;
+            file->seek(pos);
+            file->write(QByteArray {reinterpret_cast<const char *>(&after), sizeof(after)});
+        }
+        file->close();
+        file->open(QIODevice::ReadOnly);
     }
 }
 
@@ -106,4 +145,28 @@ void MainWindow::slot_onCloseFile() {
         ui->tabWidget->setEnabled(false);
         ui->tabWidget->setTabVisible(0, true);
     }
+}
+
+void MainWindow::slot_onRestoreFile() {
+    // find current file viewer widget
+    auto row = ui->o_fileList->currentRow();
+    if (row == -1) return;
+    auto iter = m_widgets.find(row);
+    if (iter == m_widgets.end()) return;
+    auto widget = iter->second;
+
+    // select backup file
+    auto const &homes = QStandardPaths::standardLocations(QStandardPaths::HomeLocation);
+    QString homePath;
+    if (!homes.isEmpty()) {
+        homePath = homes[0];
+    }
+    auto path = QFileDialog::getOpenFileName(this, tr("Choose to save backup file"), homePath);
+
+    // restore also needs to be done in a thread
+    auto bak_file = std::make_shared<QFile>(path);
+    auto file = widget->file();
+
+    auto thread = new RestoreThread(bak_file, file);
+    thread->start();
 }
