@@ -2,10 +2,11 @@
 #define ENUM_H
 
 #include "IBaseEntity.h"
+#include "StructReader_global.h"
 #include "common/macros.h"
 
 namespace Entity {
-    class Enum : public IBaseEntity {
+    class STRUCTREADER_EXPORT Enum : public IBaseEntity {
        public:
         Enum() = default;
         Enum(const QJsonObject &);

@@ -4,11 +4,12 @@
 #include <QString>
 
 #include "IBaseEntity.h"
+#include "StructReader_global.h"
 #include "common/defines.h"
 #include "common/macros.h"
 
 namespace Entity {
-    class Alias : public IBaseEntity {
+    class STRUCTREADER_EXPORT Alias : public IBaseEntity {
        public:
         Alias() = default;
         Alias(const QJsonObject &);

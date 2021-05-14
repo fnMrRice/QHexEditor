@@ -13,13 +13,8 @@ SOURCES += \
     DataViewWidget/Cursor/IOverlayWidget.cpp \
     DataViewWidget/Cursor/CursorController.cpp \
     DataViewWidget/Cursor/IBeamCursorOverlay.cpp \
-    Entity/Alias.cpp \
-    Entity/Enum.cpp \
-    Entity/IBaseEntity.cpp \
-    Entity/Struct.cpp \
     StructViewWidget/StructSelectDialog.cpp \
     StructViewWidget/StructViewWidget.cpp \
-    common/DataReader.cpp \
     common/FileReader.cpp \
     MainWindow/FileViewWidget.cpp \
     MainWindow/MainWindow.cpp \
@@ -34,13 +29,8 @@ HEADERS += \
     DataViewWidget/Cursor/CursorController.h \
     DataViewWidget/Cursor/IBeamCursorOverlay.h \
     DataViewWidget/Cursor/IOverlayWidget.h \
-    Entity/Alias.h \
-    Entity/Enum.h \
-    Entity/IBaseEntity.h \
-    Entity/Struct.h \
     StructViewWidget/StructSelectDialog.h \
     StructViewWidget/StructViewWidget.h \
-    common/DataReader.h \
     common/Exceptions.h \
     common/FileReader.h \
     MainWindow/FileViewWidget.h \
@@ -48,8 +38,6 @@ HEADERS += \
     common/RenderColor.h \
     DataViewWidget/DataRenderWidget.h \
     common/Settings.h \
-    common/defines.h \
-    common/macros.h \
     common/pch.h \
     common/utils.h
 
@@ -63,3 +51,10 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../StructReader/release/ -lStructReader
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../StructReader/debug/ -lStructReader
+else:unix: LIBS += -L$$OUT_PWD/../StructReader/ -lStructReader
+
+INCLUDEPATH += $$PWD/../StructReader
+DEPENDPATH += $$PWD/../StructReader

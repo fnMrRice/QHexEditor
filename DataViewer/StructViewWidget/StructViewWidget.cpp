@@ -1,6 +1,7 @@
 #include "StructViewWidget.h"
 
-#include "common/DataReader.h"
+#include <DataReader.h>
+
 #include "ui_StructViewWidget.h"
 
 StructViewWidget::StructViewWidget(const std::shared_ptr<Entity::Struct> &item,

@@ -78,10 +78,10 @@ void FileViewWidget::slot_onCursorPosChanged(size_t pos) {
     ui->io_c8->setText(QString(value_of_char));
     ui->io_c16->setText(QString::fromStdWString(arr));
 
-    ui->io_utf8->setText(QString::fromUtf8(data)[0]);
-    ui->io_utf16->setText(QString::fromUtf16(static_cast<char16_t *>(raw), 8)[0]);
+    ui->io_utf8->setText(QString(QString::fromUtf8(data)[0]));
+    ui->io_utf16->setText(QString(QString::fromUtf16(static_cast<char16_t *>(raw), 8)[0]));
 
-    ui->io_ansi->setText(QString::fromLocal8Bit(data)[0]);
+    ui->io_ansi->setText(QString(QString::fromLocal8Bit(data)[0]));
 }
 
 void FileViewWidget::slot_onStructViewMenu(const QPoint &pos) {

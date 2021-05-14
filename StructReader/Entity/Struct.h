@@ -1,10 +1,11 @@
 #ifndef STRUCT_H
 #define STRUCT_H
 #include "IBaseEntity.h"
+#include "StructReader_global.h"
 #include "common/macros.h"
 
 namespace Entity {
-    class Struct : public IBaseEntity {
+    class STRUCTREADER_EXPORT Struct : public IBaseEntity {
        public:
         Struct() = default;
         Struct(const QString &name);

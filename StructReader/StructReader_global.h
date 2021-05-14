@@ -1,0 +1,12 @@
+#ifndef STRUCTREADER_GLOBAL_H
+#define STRUCTREADER_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(STRUCTREADER_LIBRARY)
+#  define STRUCTREADER_EXPORT Q_DECL_EXPORT
+#else
+#  define STRUCTREADER_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // STRUCTREADER_GLOBAL_H

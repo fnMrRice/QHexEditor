@@ -1,8 +1,9 @@
 #include "MainWindow.h"
 
+#include <DataReader.h>
+
 #include <QMenu>
 
-#include "DataReader.h"
 #include "Dialogs/AliasDialog.h"
 #include "Dialogs/EnumDialog.h"
 #include "Dialogs/StructDialog.h"

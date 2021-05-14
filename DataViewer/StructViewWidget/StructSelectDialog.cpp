@@ -1,6 +1,7 @@
 #include "StructSelectDialog.h"
 
-#include "common/DataReader.h"
+#include <DataReader.h>
+
 #include "ui_StructSelectDialog.h"
 
 StructSelectDialog::StructSelectDialog(QWidget *parent) : QDialog(parent),
