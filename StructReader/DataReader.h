@@ -1,16 +1,17 @@
 #ifndef DATAREADER_H
 #define DATAREADER_H
 
-#include <QFile>
 #include <QObject>
+#include <memory>
 #include <mutex>
 #include <set>
 
 #include "Entity/Alias.h"
 #include "Entity/Enum.h"
 #include "Entity/Struct.h"
+#include "StructReader_global.h"
 
-class DataReader : public QObject {
+class STRUCTREADER_EXPORT DataReader : public QObject {
     Q_OBJECT
    public:
     explicit DataReader();
