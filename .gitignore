@@ -1,0 +1,6 @@
+# Qt creator default build directory
+build-*
+# Qt creator user config
+*.pro.user
+# Qt translation file
+*.qm
