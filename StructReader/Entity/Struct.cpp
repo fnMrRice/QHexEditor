@@ -79,13 +79,16 @@ namespace Entity {
         size_t retval = 0;
         for (auto const &[_, type] : m_values) {
             if (auto aa = a.find(type); aa != a.end()) {
-                retval = aa->second->get_size();
+                retval += aa->second->get_size();
+                continue;
             }
             if (auto ss = s.find(type); ss != s.end()) {
-                retval = ss->second->get_size();
+                retval += ss->second->get_size();
+                continue;
             }
             if (auto ee = e.find(type); ee != e.end()) {
-                retval = ee->second->get_size();
+                retval += ee->second->get_size();
+                continue;
             }
         }
         return retval;

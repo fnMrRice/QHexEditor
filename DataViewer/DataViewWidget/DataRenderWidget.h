@@ -40,7 +40,7 @@ class DataRenderWidget : public QWidget {
     void drawColumnHeader(QPainter *painter, const QRect &rect);
     void drawDataTable(const size_t &begin, const QRect &dataArea, QPainter *painter);
     void drawTableRow(const size_t &begin, const QRect &rowRect, QPainter *painter);
-    void drawSingleByte(const size_t &bytePos, const QRect &bodyArea, QPainter *painter);
+    bool drawSingleByte(const size_t &bytePos, const QRect &bodyArea, QPainter *painter);
     void drawSingleSelected(const QRect &rect, const size_t &pos, QPainter *painter);
     void drawSingleModified(const QRect &rect, const size_t &pos, QPainter *painter);
     void drawSingleOddColumn(const QRect &rect, const size_t &pos, QPainter *painter);

@@ -34,7 +34,7 @@ void StructViewWidget::loadStruct(const std::shared_ptr<Entity::Struct> &item, c
         root = ui->treeWidget->topLevelItem(0);
     }
 
-    for (auto const &[name, type] : m_item->get_values()) {
+    for (auto const &[name, type] : item->get_values()) {
         if (auto item = dr->getAlias(type)) {  // is alias
             auto const &size = item->get_size();
             QString result;
@@ -87,8 +87,13 @@ void StructViewWidget::loadStruct(const std::shared_ptr<Entity::Struct> &item, c
             } else {
                 continue;
             }
-            QString result_str = QString("%1(%2)").arg(values.at(result)).arg(result);
-            root->addChild(new QTreeWidgetItem({item->get_name(), result_str, QString::number(item->get_size())}));
+            if (auto res = values.find(result); res != values.end()) {
+                QString result_str = QString("%1(%2)").arg(res->second).arg(result);
+                root->addChild(new QTreeWidgetItem({item->get_name(), result_str, QString::number(item->get_size())}));
+            } else {
+                QString result_str = QString("%1").arg(result);
+                root->addChild(new QTreeWidgetItem({item->get_name(), result_str, QString::number(item->get_size())}));
+            }
             value += item->get_size();
             continue;
         }

@@ -3,8 +3,7 @@
 #include "Utils/ByteArrayReader.h"
 #include "Utils/Utils.h"
 
-BackupInfo::BackupInfo() {
-}
+BackupInfo::BackupInfo() {}
 
 QByteArray BackupInfo::serialize() const {
     QByteArray retval;

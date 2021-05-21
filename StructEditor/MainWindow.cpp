@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
 
-    ui->toolBar->setVisible(false);
+    //    ui->toolBar->setVisible(false);
 
     initSignals();
     initTableSettings();

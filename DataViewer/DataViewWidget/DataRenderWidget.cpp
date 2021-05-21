@@ -188,15 +188,16 @@ void DataRenderWidget::drawTableRow(const size_t &begin, const QRect &rowRect, Q
             rect.setLeft(rect.left() + m_textSize.width());
             rect.setRight(rect.right() + m_textSize.width());
         }
-        drawSingleByte(begin + (size_t)i, rect, painter);
+        if (!drawSingleByte(begin + (size_t)i, rect, painter)) break;
 
         rect.setLeft(rect.right());
         rect.setRight(rect.left() + m_size2.width());
     }
 }
 
-void DataRenderWidget::drawSingleByte(const size_t &pos, const QRect &bodyArea, QPainter *painter) {
+bool DataRenderWidget::drawSingleByte(const size_t &pos, const QRect &bodyArea, QPainter *painter) {
     painter->save();
+    if (m_data.size() <= static_cast<int>(pos)) return false;
     if (m_selectedArea.first <= pos && pos < m_selectedArea.second) {
         drawSingleSelected(bodyArea, pos, painter);
     } else if (m_modified.count(pos)) {
@@ -207,6 +208,7 @@ void DataRenderWidget::drawSingleByte(const size_t &pos, const QRect &bodyArea, 
         drawSingleEvenColumn(bodyArea, pos, painter);
     }
     painter->restore();
+    return true;
 }
 
 void DataRenderWidget::drawSingleSelected(const QRect &rect, const size_t &pos, QPainter *painter) {
@@ -312,7 +314,7 @@ void DataRenderWidget::slot_onCopy() {
     QString clipboard_text;
     for (size_t i = begin; i < end; i++) {
         static auto constexpr HEX_DIGITS = "0123456789ABCDEF";
-        auto const byte = m_reader->readBytes(i, 1)[0];  // do not use ref
+        auto const byte = m_reader->readBytes(i, 1).at(0);  // do not use ref
         auto const &left = byte >> 4 & 0x0F;
         auto const &right = byte & 0x0F;
         auto const &left_c = HEX_DIGITS[left];
